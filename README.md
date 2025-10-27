@@ -1,10 +1,10 @@
 # API REST Django - Catálogo de Filmes 🎬
 
-Uma API REST completa para gerenciar um catálogo de filmes com sistema de avaliações, desenvolvida com Django e Django REST Framework.
+API REST para gerenciar um catálogo de filmes com sistema de avaliações, desenvolvida com Django e Django REST Framework.
 
 ## 📋 Descrição
 
-Este projeto implementa uma API REST para gerenciar filmes e suas avaliações. Oferece duas versões de API (V1 e V2) com diferentes abordagens arquiteturais, permitindo flexibilidade na escolha do endpoint.
+Este projeto implementa uma API REST para gerenciar filmes e suas avaliações. Oferece duas versões de API (V1 e V2) que permite flexibilidade na escolha do endpoint.
 
 ## 🚀 Tecnologias
 
@@ -69,13 +69,6 @@ O servidor estará disponível em `http://127.0.0.1:8000`
 
 ## 📚 Modelos
 
-### Modelo Base (Abstract)
-
-Todos os modelos herdam de uma classe `Base` que fornece:
-- `criacao`: Data/hora de criação (auto_now_add)
-- `atualizacao`: Data/hora da última atualização (auto_now)
-- `ativo`: Status de atividade (padrão: True)
-
 ### Filme
 
 ```python
@@ -88,11 +81,6 @@ Todos os modelos herdam de uma classe `Base` que fornece:
     "avaliacoes": [1, 2, 3]
 }
 ```
-
-**Campos:**
-- `titulo` (CharField, max_length=255)
-- `url` (URLField, única)
-- `avaliacoes` (relacionamento reverso)
 
 ### Avaliação
 
@@ -109,16 +97,6 @@ Todos os modelos herdam de uma classe `Base` que fornece:
 }
 ```
 
-**Campos:**
-- `filme` (ForeignKey para Filme)
-- `nome` (CharField, max_length=255)
-- `email` (EmailField) - somente escrita (write_only)
-- `comentario` (TextField, opcional)
-- `avaliacao` (DecimalField, até 3 dígitos com 1 casa decimal)
-
-**Restrições:**
-- Combinação única de (email, filme) - um usuário pode avaliar um filme apenas uma vez
-
 ## 🔌 Endpoints da API
 
 ### API V1 (Views Genéricas)
@@ -131,10 +109,9 @@ Todos os modelos herdam de uma classe `Base` que fornece:
 | POST | `/api/v1/filmes/` | Cria um novo filme |
 | GET | `/api/v1/filmes/<id>/` | Obtém um filme específico |
 | PUT | `/api/v1/filmes/<id>/` | Atualiza um filme |
-| PATCH | `/api/v1/filmes/<id>/` | Atualiza parcialmente um filme |
 | DELETE | `/api/v1/filmes/<id>/` | Deleta um filme |
 
-#### Avaliações Gerais
+#### Avaliações
 
 | Método | Endpoint | Descrição |
 |--------|----------|-----------|
@@ -187,68 +164,6 @@ Todos os modelos herdam de uma classe `Base` que fornece:
 | PUT | `/api/v2/filmes/<filme_id>/avaliacoes/<avaliacao_id>/` | Atualiza avaliação de um filme |
 | DELETE | `/api/v2/filmes/<filme_id>/avaliacoes/<avaliacao_id>/` | Deleta avaliação de um filme |
 
-## 📝 Exemplos de Uso
-
-### Criar um Filme
-
-```bash
-curl -X POST http://127.0.0.1:8000/api/v1/filmes/ \
-  -H "Content-Type: application/json" \
-  -d '{
-    "titulo": "Matrix",
-    "url": "https://www.youtube.com/watch?v=example"
-  }'
-```
-
-### Criar uma Avaliação
-
-```bash
-curl -X POST http://127.0.0.1:8000/api/v1/filmes/1/avaliacoes/ \
-  -H "Content-Type: application/json" \
-  -d '{
-    "nome": "João Silva",
-    "email": "joao@example.com",
-    "comentario": "Ótimo filme!",
-    "avaliacao": "9.5"
-  }'
-```
-
-### Obter Avaliação Específica de um Filme
-
-```bash
-curl http://127.0.0.1:8000/api/v1/filmes/1/avaliacoes/1/
-```
-
-### Atualizar uma Avaliação
-
-```bash
-curl -X PUT http://127.0.0.1:8000/api/v1/filmes/1/avaliacoes/1/ \
-  -H "Content-Type: application/json" \
-  -d '{
-    "comentario": "Filme incrível!",
-    "avaliacao": "10.0"
-  }'
-```
-
-### Deletar uma Avaliação
-
-```bash
-curl -X DELETE http://127.0.0.1:8000/api/v1/filmes/1/avaliacoes/1/
-```
-
-## 🔐 Autenticação e Permissões
-
-A API utiliza as seguintes configurações de segurança:
-
-- **Autenticação**: SessionAuthentication + TokenAuthentication
-- **Permissões**: IsAuthenticatedOrReadOnly (leitura pública, escrita requer autenticação)
-- **Paginação**: PageNumberPagination com 1 item por página
-
-Para autenticar, inclua o token no header:
-```bash
-curl -H "Authorization: Token seu_token_aqui" http://127.0.0.1:8000/api/v1/filmes/
-```
-
 ## 🗄️ Admin Panel
 
 Acesse o painel administrativo em `http://127.0.0.1:8000/admin/`
@@ -288,9 +203,6 @@ Api Rest Django/
 LANGUAGE_CODE = 'pt-br'
 TIME_ZONE = 'America/Sao_Paulo'
 
-# DEBUG (desativar em produção)
-DEBUG = True
-
 # Aplicativos instalados
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -311,12 +223,6 @@ INSTALLED_APPS = [
 ```bash
 python manage.py makemigrations
 python manage.py migrate
-```
-
-### Executar testes
-
-```bash
-python manage.py test
 ```
 
 ### Shell interativo
@@ -342,7 +248,7 @@ Este projeto está disponível sob a licença MIT.
 
 ## 👨‍💻 Autor
 
-Desenvolvido como um projeto de API REST com Django.
+Desenvolvido como um projeto de API REST com Django com fins acadêmicos para a disciplina Programação Web II no Instituto Federal Catarinense - Campus Fraiburgo.
 
 ## 📞 Suporte
 
