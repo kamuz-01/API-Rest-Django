@@ -7,7 +7,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import mixins
 
-""""
+"""
 API v1
 """
 
@@ -26,8 +26,8 @@ class AvaliacoesAPIView(generics.ListCreateAPIView):
     serializer_class = AvaliacaoSerializers
     
     def get_queryset(self):
-        if self.kwargs.get('fime_pk'):
-            return self.get_queryset.filter(filme_id=self.kwargs.get('filme_pk'))
+        if self.kwargs.get('filme_pk'):
+            return self.queryset.filter(filme_id=self.kwargs.get('filme_pk'))
         return self.queryset.all()
     
 class AvaliacaoAPIView(generics.RetrieveUpdateDestroyAPIView):
@@ -41,7 +41,7 @@ class AvaliacaoAPIView(generics.RetrieveUpdateDestroyAPIView):
     
 
 
-""""
+"""
 API v2
 """
 
@@ -55,11 +55,25 @@ class FilmeViewSet(viewsets.ModelViewSet):
         serializer = AvaliacaoSerializers(filme.avaliacoes.all(), many=True)
         return Response(serializer.data)
     
-class AvaliacaoViewSet(mixins.ListModelMixin, 
-                       mixins.CreateModelMixin, 
-                       mixins.RetrieveModelMixin, 
-                       mixins.UpdateModelMixin, 
-                       mixins.DestroyModelMixin, 
-                       viewsets.GenericViewSet):
-    queryset = Avaliacao.objects.all()
+class AvaliacaoViewSet(viewsets.ModelViewSet):
     serializer_class = AvaliacaoSerializers
+    
+    def get_queryset(self):
+        # Filtra as avaliações pelo filme_pk se fornecido na URL
+        filme_pk = self.kwargs.get('filme_pk')
+        if filme_pk is not None:
+            return Avaliacao.objects.filter(filme_id=filme_pk)
+        return Avaliacao.objects.all()
+    
+    def get_object(self):
+        # Obtém um objeto específico de avaliação
+        filme_pk = self.kwargs.get('filme_pk')
+        avaliacao_pk = self.kwargs.get('pk')
+        
+        if filme_pk is not None:
+            # Valida se o filme existe
+            get_object_or_404(Filme, pk=filme_pk)
+            # Retorna a avaliação específica do filme
+            return get_object_or_404(Avaliacao, pk=avaliacao_pk, filme_id=filme_pk)
+        
+        return get_object_or_404(Avaliacao, pk=avaliacao_pk)

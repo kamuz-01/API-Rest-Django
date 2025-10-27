@@ -17,11 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from catalogo.urls import router
+from catalogo.urls import router, filmes_router
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('rest_framework.urls')),
+    # Todas as APIs (V1 e V2) estão em catalogo/urls.py
     path('api/v1/', include('catalogo.urls')),
-    path('api/v2/', include(router.urls)),
-    #path('api/v2/', include('catalogo.urls')),
+    path('api/v2/', include('catalogo.urls')),
 ]
